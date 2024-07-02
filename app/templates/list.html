@@ -1,0 +1,51 @@
+<!-- templates/list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Dashboard - Listagem</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Crypto Dashboard - Listagem</h1>
+
+    <div>
+        <a href="{{ url_for('main.index') }}">Retornar para a Listagem</a>
+    </div>
+    
+    <div id="crypto-data"></div>
+
+    <script>
+        async function fetchCryptos() {
+            const response = await fetch('/cryptos');
+            const data = await response.json();
+            const cryptos = data.data;
+            let html = '<ul>';
+            cryptos.forEach(crypto => {
+                const rank = crypto.cmc_rank.toFixed(0);
+                const price = crypto.quote.USD.price.toFixed(2);
+                const percent_change_1h = crypto.quote.USD.percent_change_1h.toFixed(2);
+                const percentChange24h = crypto.quote.USD.percent_change_24h.toFixed(2);
+                const percentChange7d = crypto.quote.USD.percent_change_7d.toFixed(2);
+                const marketCap = crypto.quote.USD.market_cap.toLocaleString();
+                const volume24h = crypto.quote.USD.volume_24h.toLocaleString();
+
+                html += `<li>
+                    <strong>${rank}# ${crypto.name}</strong><br>
+                    Price: $${price}<br>
+                    1h Change: ${percent_change_1h}%<br>
+                    24h Change: ${percentChange24h}%<br>
+                    7d Change: ${percentChange7d}%<br>
+                    Market Cap: $${marketCap}<br>
+                    Volume(24h): $${volume24h}
+                </li>`;
+            });
+            html += '</ul>';
+            document.getElementById('crypto-data').innerHTML = html;
+        }
+
+        fetchCryptos();
+    </script>
+</body>
+</html>

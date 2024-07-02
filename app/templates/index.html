@@ -9,23 +9,10 @@
 </head>
 <body>
     <h1>Crypto Dashboard</h1>
-    <div id="crypto-data"></div>
-
-    <script>
-        async function fetchCryptos() {
-            const response = await fetch('/cryptos');
-            const data = await response.json();
-            const cryptos = data.data;
-            let html = '<ul>';
-            cryptos.forEach(crypto => {
-                html += `<li>${crypto.name}: $${crypto.quote.USD.price.toFixed(2)}</li>`;
-            });
-            html += '</ul>';
-            document.getElementById('crypto-data').innerHTML = html;
-        }
-
-        fetchCryptos();
-    </script>
+    
+    <div>
+        <a href="{{ url_for('main.list_cryptos') }}">Listagem de Criptomoedas</a>
+        <a href="{{ url_for('main.search') }}">Pesquisar Criptomoeda</a>
+    </div>
 </body>
 </html>
-

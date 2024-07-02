@@ -1,0 +1,57 @@
+
+<!-- templates/search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Dashboard - Pesquisa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Crypto Dashboard - Pesquisa</h1>
+    
+    <div>
+        <input type="text" id="searchInput" placeholder="Search for a cryptocurrency...">
+        <button onclick="searchCrypto()">Search</button>
+    </div>
+    
+    <div id="crypto-details"></div>
+
+    <div>
+        <a href="{{ url_for('main.index') }}">Retornar para a Listagem</a>
+    </div>
+    
+    <script>
+        async function searchCrypto() {
+            const name = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!name) {
+                alert("Please enter a cryptocurrency name.");
+                return;
+            }
+            const response = await fetch(`/crypto/${name}`);
+            const data = await response.json();
+            if (data.status.error_code !== 0) {
+                alert('Cryptocurrency not found');
+                return;
+            }
+            const crypto = data.data[Object.keys(data.data)[0]];
+            const price = crypto.quote.USD.price.toFixed(2);
+            const marketCap = crypto.quote.USD.market_cap.toLocaleString();
+            const volume24h = crypto.quote.USD.volume_24h.toLocaleString();
+            const circulatingSupply = crypto.circulating_supply.toLocaleString();
+            const percentChange24h = crypto.quote.USD.percent_change_24h.toFixed(2);
+            const percentChange7d = crypto.quote.USD.percent_change_7d.toFixed(2);
+
+            let html = `<h2>${crypto.name} (${crypto.symbol})</h2>
+                <p>Price: $${price}</p>
+                <p>Market Cap: $${marketCap}</p>
+                <p>Volume (24h): $${volume24h}</p>
+                <p>Circulating Supply: ${circulatingSupply} ${crypto.symbol}</p>
+                <p>24h Change: ${percentChange24h}%</p>
+                <p>7d Change: ${percentChange7d}%</p>`;
+            document.getElementById('crypto-details').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
