@@ -15,6 +15,8 @@
     </div>
     
     <div id="crypto-data"></div>
+    <h2>Favoritos</h2>
+    <ul id="favorite-list"></ul>
 
     <script>
         async function fetchCryptos() {
@@ -23,6 +25,7 @@
             const cryptos = data.data;
             let html = '<ul>';
             cryptos.forEach(crypto => {
+                const cryptoId = crypto.id;
                 const rank = crypto.cmc_rank.toFixed(0);
                 const price = crypto.quote.USD.price.toFixed(2);
                 const percent_change_1h = crypto.quote.USD.percent_change_1h.toFixed(2);
@@ -38,14 +41,44 @@
                     24h Change: ${percentChange24h}%<br>
                     7d Change: ${percentChange7d}%<br>
                     Market Cap: $${marketCap}<br>
-                    Volume(24h): $${volume24h}
+                    Volume(24h): $${volume24h}<br>
+                    <button onclick="addToFavorites(${cryptoId}, '${crypto.name}', '${crypto.symbol}')">Add to Favorites</button>
                 </li>`;
             });
             html += '</ul>';
             document.getElementById('crypto-data').innerHTML = html;
         }
 
+        function addToFavorites(id, name, symbol) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const exists = favorites.some(fav => fav.id === id);
+            if (!exists) {
+                favorites.push({ id, name, symbol });
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                displayFavorites();
+            } else {
+                alert('This cryptocurrency is already in your favorites.');
+            }
+        }
+
+        function displayFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            let html = '';
+            favorites.forEach(fav => {
+                html += `<li>${fav.name} (${fav.symbol}) <button onclick="removeFromFavorites(${fav.id})">Remove</button></li>`;
+            });
+            document.getElementById('favorite-list').innerHTML = html;
+        }
+
+        function removeFromFavorites(id) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            favorites = favorites.filter(fav => fav.id !== id);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            displayFavorites();
+        }
+
         fetchCryptos();
+        displayFavorites();
     </script>
 </body>
 </html>

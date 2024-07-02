@@ -14,5 +14,20 @@
         <a href="{{ url_for('main.list_cryptos') }}">Listagem de Criptomoedas</a>
         <a href="{{ url_for('main.search') }}">Pesquisar Criptomoeda</a>
     </div>
+    <h2>Favoritos</h2>
+    <ul id="favorite-list"></ul>
+
+    <script>
+        function displayFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            let html = '';
+            favorites.forEach(fav => {
+                html += `<li>${fav.name} (${fav.symbol})</li>`;
+            });
+            document.getElementById('favorite-list').innerHTML = html;
+        }
+
+        displayFavorites();
+    </script>
 </body>
 </html>
