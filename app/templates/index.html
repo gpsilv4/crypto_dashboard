@@ -1,0 +1,31 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Crypto Dashboard</h1>
+    <div id="crypto-data"></div>
+
+    <script>
+        async function fetchCryptos() {
+            const response = await fetch('/cryptos');
+            const data = await response.json();
+            const cryptos = data.data;
+            let html = '<ul>';
+            cryptos.forEach(crypto => {
+                html += `<li>${crypto.name}: $${crypto.quote.USD.price.toFixed(2)}</li>`;
+            });
+            html += '</ul>';
+            document.getElementById('crypto-data').innerHTML = html;
+        }
+
+        fetchCryptos();
+    </script>
+</body>
+</html>
+
