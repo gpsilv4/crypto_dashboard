@@ -59,23 +59,7 @@
             } else {
                 alert('This cryptocurrency is already in your favorites.');
             }
-        }
-
-        function displayFavorites() {
-            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-            let html = '';
-            favorites.forEach(fav => {
-                html += `<li>${fav.name} (${fav.symbol}) <button onclick="removeFromFavorites(${fav.id})">Remove</button></li>`;
-            });
-            document.getElementById('favorite-list').innerHTML = html;
-        }
-
-        function removeFromFavorites(id) {
-            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-            favorites = favorites.filter(fav => fav.id !== id);
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            displayFavorites();
-        }
+        }       
 
         fetchCryptos();
         displayFavorites();

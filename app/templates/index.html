@@ -22,9 +22,23 @@
             const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
             let html = '';
             favorites.forEach(fav => {
-                html += `<li>${fav.name} (${fav.symbol})</li>`;
+                html += `<li>${fav.name} (${fav.symbol}) 
+                            <button onclick="redirectToSearch('${fav.symbol}')">Detalhes</button>
+                            <button onclick="removeFromFavorites(${fav.id})">Remover</button>
+                         </li>`;
             });
             document.getElementById('favorite-list').innerHTML = html;
+        }
+
+        function redirectToSearch(symbol) {
+            window.location.href = `{{ url_for('main.search') }}?symbol=${symbol}`;
+        }
+
+        function removeFromFavorites(id) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            favorites = favorites.filter(fav => fav.id !== id);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            displayFavorites();
         }
 
         displayFavorites();

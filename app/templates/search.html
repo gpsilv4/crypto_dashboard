@@ -26,6 +26,11 @@
     <div id="crypto-details"></div>
 
     <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
         async function searchCrypto() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const type = document.getElementById('searchType').value;
@@ -59,6 +64,16 @@
                 <p>7d Change: ${percentChange7d}%</p>`;
             document.getElementById('crypto-details').innerHTML = html;
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const symbol = getQueryParam('symbol');
+            if (symbol) {
+                document.getElementById('searchInput').value = symbol;
+                document.getElementById('searchType').value = 'symbol';
+                searchCrypto();
+            }
+        });
+        
     </script>
 </body>
 </html>
